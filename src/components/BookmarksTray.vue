@@ -21,23 +21,29 @@ defineProps({
 
 <style scoped>
 .bookmarks-tray {
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 5px; /* Reduced space between grid items */
   position: absolute;
   background-color: #f1f1f1;
-  max-height: 400px;
-  overflow-y: auto;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 999; /* Ensure it's above other content */
   top: 100%;
   left: 0;
   width: 100%;
+  padding: 5px; /* Reduced padding */
 }
 
 .bookmark-item a {
   color: black;
-  padding: 12px 16px;
+  padding: 5px 8px; /* Further reduced padding for grid items */
   text-decoration: none;
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #eee;
+  background-color: #fff;
 }
 
 .bookmark-item a:hover {
