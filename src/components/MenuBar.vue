@@ -17,26 +17,17 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import BookmarksTray from './BookmarksTray.vue';
 
-export default {
-  name: 'MenuBar',
-  components: {
-    BookmarksTray
-  },
-  data() {
-    return {
-      bookmarks: [
-        { name: 'Google', link: 'https://google.com' },
-        { name: 'Facebook', link: 'https://facebook.com' },
-        { name: 'Apple', link: 'https://apple.com' },
-        { name: 'Amazon', link: 'https://amazon.com' },
-        { name: 'Microsoft', link: 'https://microsoft.com' }
-      ]
-    };
-  }
-}
+const bookmarks = ref([
+  { name: 'Google', link: 'https://google.com' },
+  { name: 'Facebook', link: 'https://facebook.com' },
+  { name: 'Apple', link: 'https://apple.com' },
+  { name: 'Amazon', link: 'https://amazon.com' },
+  { name: 'Microsoft', link: 'https://microsoft.com' }
+]);
 </script>
 
 <style scoped>

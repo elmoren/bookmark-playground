@@ -9,25 +9,20 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'BookmarksTray',
-  props: {
-    bookmarks: {
-      type: Array,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isTrayOpen: false
-    }
-  },
-  methods: {
-    toggleTray() {
-      this.isTrayOpen = !this.isTrayOpen;
-    }
+<script setup>
+import { ref } from 'vue';
+
+defineProps({
+  bookmarks: {
+    type: Array,
+    required: true
   }
+});
+
+const isTrayOpen = ref(false);
+
+function toggleTray() {
+  isTrayOpen.value = !isTrayOpen.value;
 }
 </script>
 
