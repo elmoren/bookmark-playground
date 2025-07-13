@@ -38,11 +38,8 @@ function calculateItemsPerPage() {
   const gridHeight = bookmarksGridRef.value.offsetHeight;
   const gridWidth = bookmarksGridRef.value.offsetWidth;
 
-  const itemHeight = 32;
-  const itemMinWidth = 254;
-
-  const estimatedRows = Math.ceil(gridHeight / itemHeight);
-  const estimatedColumns = Math.ceil(gridWidth / itemMinWidth);
+  const estimatedRows = 15; // Fixed number of rows
+  const estimatedColumns = Math.min(6, Math.floor(gridWidth / 254));
 
   // Ensure at least 1 column
   const actualColumns = Math.max(1, estimatedColumns);
@@ -102,25 +99,26 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   position: absolute;
-  background-color: #f1f1f1;
+  background-color: #f5f5f5;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 999; /* Ensure it's above other content */
-  top: 100%;
+  top: 105%;
   left: 0;
   width: 100%;
   padding: 5px;
-  min-height: 200px; /* Keep min-height for small content */
-  height: 80vh; /* Explicitly set height to force column wrapping */
+  min-height: 600px; /* Keep min-height for small content */
+  max-height: 90dvh; /* Set max-height to a percentage of viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .bookmarks-grid {
   display: grid;
   grid-auto-flow: column; /* Fill columns first */
-  grid-template-rows: repeat(auto-fill, minmax(30px, 1fr)); /* Fixed row height for consistent wrapping */
+  grid-template-rows: repeat(15, minmax(min-content, max-content)); /* Fixed 15 rows */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ensure columns are wide enough */
   gap: 4px;
   flex-grow: 1; /* Allow grid to take available height */
-  height: 100%; /* Crucial for column wrapping */
+  /* Removed height: 100%; */
 }
 
 .bookmark-item a {

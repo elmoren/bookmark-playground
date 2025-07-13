@@ -42,7 +42,7 @@ function toggleBookmarksTray() {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #f8f9fa;
+  background-color: white;
   border-bottom: 1px solid #dee2e6;
   position: sticky;
   top: 0;
