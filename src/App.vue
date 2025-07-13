@@ -7,7 +7,7 @@ const bookmarks = ref([]);
 function generateBookmarks(count) {
   const newBookmarks = [];
   for (let i = 1; i <= count; i++) {
-    newBookmarks.push({ name: `Bookmark ${i}`, link: `https://example.com/${i}` });
+    newBookmarks.push({ name: `Bookmark ${i}`, link: `` });
   }
   bookmarks.value = newBookmarks;
 }
