@@ -28,7 +28,7 @@ const props = defineProps({
 });
 
 const currentPage = ref(1);
-const itemsPerPage = ref(50); // Adjust this value based on desired items per page
+const itemsPerPage = ref(Math.floor((window.innerHeight * 0.8 - 100) / 30) * Math.floor(window.innerWidth / 250)); // Estimate based on 80vh height, 30px row height, 250px column width
 
 const paginatedBookmarks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -76,13 +76,18 @@ watch(() => props.isTrayOpen, (newValue) => {
   left: 0;
   width: 100%;
   padding: 5px;
+  min-height: 200px; /* Keep min-height for small content */
+  height: 80vh; /* Explicitly set height to force column wrapping */
 }
 
 .bookmarks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Increased min-width for full text visibility */
-  gap: 3px;
-  padding-bottom: 10px; /* Space for pagination controls */
+  grid-auto-flow: column; /* Fill columns first */
+  grid-template-rows: repeat(auto-fill, minmax(30px, 1fr)); /* Fixed row height for consistent wrapping */
+  grid-template-columns: repeat(auto-fit, minmax(250px, min-content)); /* Ensure columns are wide enough */
+  gap: 4px;
+  flex-grow: 1; /* Allow grid to take available height */
+  height: 100%; /* Crucial for column wrapping */
 }
 
 .bookmark-item a {
@@ -90,7 +95,6 @@ watch(() => props.isTrayOpen, (newValue) => {
   padding: 3px 5px;
   text-decoration: none;
   display: block;
-  /* Removed text truncation properties */
   border: 1px solid #eee;
   background-color: #fff;
 }
