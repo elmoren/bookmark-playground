@@ -1,6 +1,6 @@
 <template>
   <div v-if="isTrayOpen" class="bookmarks-tray">
-    <div class="bookmarks-grid">
+    <div class="bookmarks-grid" ref="bookmarksGridRef">
       <div v-for="bookmark in paginatedBookmarks" :key="bookmark.name" class="bookmark-item">
         <a :href="bookmark.link" target="_blank">{{ bookmark.name }}</a>
       </div>
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
   bookmarks: {
@@ -27,8 +27,29 @@ const props = defineProps({
   }
 });
 
+const bookmarksGridRef = ref(null);
 const currentPage = ref(1);
-const itemsPerPage = ref(Math.floor((window.innerHeight * 0.8 - 100) / 30) * Math.floor(window.innerWidth / 250)); // Estimate based on 80vh height, 30px row height, 250px column width
+const itemsPerPage = ref(100);
+
+// Function to calculate items per page based on current window size
+function calculateItemsPerPage() {
+  if (!bookmarksGridRef.value) return;
+
+  const gridHeight = bookmarksGridRef.value.offsetHeight;
+  const gridWidth = bookmarksGridRef.value.offsetWidth;
+
+  const itemHeight = 32;
+  const itemMinWidth = 254;
+
+  const estimatedRows = Math.ceil(gridHeight / itemHeight);
+  const estimatedColumns = Math.ceil(gridWidth / itemMinWidth);
+
+  // Ensure at least 1 column
+  const actualColumns = Math.max(1, estimatedColumns);
+
+  itemsPerPage.value = estimatedRows * actualColumns;
+  if (itemsPerPage.value === 0) itemsPerPage.value = 1;
+}
 
 const paginatedBookmarks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -55,13 +76,25 @@ function prevPage() {
 // Reset to first page when bookmarks change or tray opens/closes
 watch(() => props.bookmarks, () => {
   currentPage.value = 1;
+  calculateItemsPerPage();
 });
 
 watch(() => props.isTrayOpen, (newValue) => {
   if (newValue) {
     currentPage.value = 1;
+    calculateItemsPerPage();
   }
 });
+
+onMounted(() => {
+  calculateItemsPerPage();
+  window.addEventListener('resize', calculateItemsPerPage);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', calculateItemsPerPage);
+});
+
 </script>
 
 <style scoped>
@@ -84,7 +117,7 @@ watch(() => props.isTrayOpen, (newValue) => {
   display: grid;
   grid-auto-flow: column; /* Fill columns first */
   grid-template-rows: repeat(auto-fill, minmax(30px, 1fr)); /* Fixed row height for consistent wrapping */
-  grid-template-columns: repeat(auto-fit, minmax(250px, min-content)); /* Ensure columns are wide enough */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ensure columns are wide enough */
   gap: 4px;
   flex-grow: 1; /* Allow grid to take available height */
   height: 100%; /* Crucial for column wrapping */
