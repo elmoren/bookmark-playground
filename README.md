@@ -1,29 +1,11 @@
-# vue-project
+# Bookmark Playgound
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a little project I used to get some experience with AI Agents. I used Gemini to create a proof of concept for display many bookmarks dynamically in a tray under a navigation menu.
 
-## Recommended IDE Setup
+You can read more about it [here](www.njelmore.com/posts/posts/2025-07-12_Coding%20With%20Gemini.html)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
+## Compile and Run for Development
 
 ```sh
 npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
 ```
