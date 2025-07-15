@@ -36,7 +36,7 @@ function calculateItemsPerPage() {
 
   const gridWidth = bookmarksGridRef.value.offsetWidth;
   const rows = 15;
-  const estimatedColumns = Math.min(6, Math.floor(gridWidth / 254));
+  const estimatedColumns = Math.min(8, Math.floor(gridWidth / 254));
   const actualColumns = Math.max(1, estimatedColumns);
 
   itemsPerPage.value = rows * actualColumns;
@@ -123,7 +123,6 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   padding: 5px;
-  min-height: 600px;
   max-height: 90dvh;
   overflow-y: auto;
 }
@@ -132,7 +131,7 @@ onUnmounted(() => {
   display: grid;
   grid-auto-flow: column;
   grid-template-rows: repeat(15, minmax(min-content, max-content));
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 4px;
   flex-grow: 1;
 }
