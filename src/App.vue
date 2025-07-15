@@ -34,6 +34,7 @@ generateBookmarks(20);
   <main>
     <div class="bookmark-controls">
       <button @click="generateBookmarks(0)">0 Bookmarks</button>
+      <button @click="generateBookmarks(10)">10 Bookmarks</button>
       <button @click="generateBookmarks(20)">20 Bookmarks</button>
       <button @click="generateBookmarks(50)">50 Bookmarks</button>
       <button @click="generateBookmarks(100)">100 Bookmarks</button>

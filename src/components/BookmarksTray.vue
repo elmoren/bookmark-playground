@@ -1,7 +1,7 @@
 <template>
   <div v-if="isTrayOpen" class="bookmarks-tray">
     <div class="bookmarks-grid" ref="bookmarksGridRef">
-      <div v-for="(bookmark, index) in paginatedBookmarks" :key="index" :class="['bookmark-item', { 'folder-item': bookmark.isFolder, 'indented-item': bookmark.isIndented }]">
+      <div v-for="(bookmark, index) in paginatedBookmarks" :key="index" :class="bookmarkClass(bookmark)">
         <a :href="bookmark.link" target="_blank">{{ bookmark.name }}</a>
       </div>
     </div>
@@ -31,34 +31,29 @@ const bookmarksGridRef = ref(null);
 const currentPage = ref(1);
 const itemsPerPage = ref(100);
 
-// Function to calculate items per page based on current window size
 function calculateItemsPerPage() {
   if (!bookmarksGridRef.value) return;
 
-  const gridHeight = bookmarksGridRef.value.offsetHeight;
   const gridWidth = bookmarksGridRef.value.offsetWidth;
-
-  const estimatedRows = 15; // Fixed number of rows
+  const rows = 15;
   const estimatedColumns = Math.min(6, Math.floor(gridWidth / 254));
-
-  // Ensure at least 1 column
   const actualColumns = Math.max(1, estimatedColumns);
 
-  itemsPerPage.value = estimatedRows * actualColumns;
+  itemsPerPage.value = rows * actualColumns;
   if (itemsPerPage.value === 0) itemsPerPage.value = 1;
 }
 
 const flattenedBookmarks = computed(() => {
-  const flatList = [];
+  const flattened = [];
   props.bookmarks.forEach(item => {
-    flatList.push({ ...item, isFolder: !!item.children });
+    flattened.push({ ...item, isFolder: !!item.children });
     if (item.children) {
       item.children.forEach(child => {
-        flatList.push({ ...child, isIndented: true });
+        flattened.push({ ...child, isIndented: true });
       });
     }
   });
-  return flatList;
+  return flattened;
 });
 
 const paginatedBookmarks = computed(() => {
@@ -70,6 +65,16 @@ const paginatedBookmarks = computed(() => {
 const totalPages = computed(() => {
   return Math.ceil(flattenedBookmarks.value.length / itemsPerPage.value);
 });
+
+const bookmarkClass = (bookmark) => {
+  return [
+    'bookmark-item',
+    {
+      'folder-item': bookmark.isFolder,
+      'indented-item': bookmark.isIndented
+    }
+  ];
+};
 
 function nextPage() {
   if (currentPage.value < totalPages.value) {
@@ -83,7 +88,6 @@ function prevPage() {
   }
 }
 
-// Reset to first page when bookmarks change or tray opens/closes
 watch(() => props.bookmarks, () => {
   currentPage.value = 1;
   calculateItemsPerPage();
@@ -114,24 +118,23 @@ onUnmounted(() => {
   position: absolute;
   background-color: #f5f5f5;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 999; /* Ensure it's above other content */
+  z-index: 999;
   top: 105%;
   left: 0;
   width: 100%;
   padding: 5px;
-  min-height: 600px; /* Keep min-height for small content */
-  max-height: 90dvh; /* Set max-height to a percentage of viewport height */
-  overflow-y: auto; /* Enable vertical scrolling */
+  min-height: 600px;
+  max-height: 90dvh;
+  overflow-y: auto;
 }
 
 .bookmarks-grid {
   display: grid;
-  grid-auto-flow: column; /* Fill columns first */
-  grid-template-rows: repeat(15, minmax(min-content, max-content)); /* Fixed 15 rows */
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ensure columns are wide enough */
+  grid-auto-flow: column;
+  grid-template-rows: repeat(15, minmax(min-content, max-content));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 4px;
-  flex-grow: 1; /* Allow grid to take available height */
-  /* Removed height: 100%; */
+  flex-grow: 1;
 }
 
 .bookmark-item a {
@@ -168,7 +171,7 @@ onUnmounted(() => {
   cursor: pointer;
   padding: 0 10px;
   font-size: 20px;
-  user-select: none; /* Prevent text selection */
+  user-select: none;
 }
 
 .arrow.disabled {
