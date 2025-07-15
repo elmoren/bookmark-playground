@@ -68,7 +68,7 @@ const paginatedBookmarks = computed(() => {
 });
 
 const totalPages = computed(() => {
-  return Math.ceil(props.bookmarks.length / itemsPerPage.value);
+  return Math.ceil(flattenedBookmarks.value.length / itemsPerPage.value);
 });
 
 function nextPage() {
