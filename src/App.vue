@@ -6,8 +6,21 @@ const bookmarks = ref([]);
 
 function generateBookmarks(count) {
   const newBookmarks = [];
-  for (let i = 1; i <= count; i++) {
-    newBookmarks.push({ name: `Bookmark ${i}`, link: `` });
+  let i = 1;
+  while (i <= count) {
+    // After 3 individual bookmarks, create a folder.
+    if (i % 8 === 4 && (count - i) >= 4) {
+      const folder = {
+        name: `Folder ${Math.ceil(i / 8)}`,
+        children: []
+      };
+      for (let j = 0; j < 4; j++) {
+        folder.children.push({ name: `Bookmark ${i++}`, link: `` });
+      }
+      newBookmarks.push(folder);
+    } else {
+      newBookmarks.push({ name: `Bookmark ${i++}`, link: `` });
+    }
   }
   bookmarks.value = newBookmarks;
 }

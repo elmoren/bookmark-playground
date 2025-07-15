@@ -1,7 +1,7 @@
 <template>
   <div v-if="isTrayOpen" class="bookmarks-tray">
     <div class="bookmarks-grid" ref="bookmarksGridRef">
-      <div v-for="bookmark in paginatedBookmarks" :key="bookmark.name" class="bookmark-item">
+      <div v-for="(bookmark, index) in paginatedBookmarks" :key="index" :class="['bookmark-item', { 'folder-item': bookmark.isFolder, 'indented-item': bookmark.isIndented }]">
         <a :href="bookmark.link" target="_blank">{{ bookmark.name }}</a>
       </div>
     </div>
@@ -48,10 +48,23 @@ function calculateItemsPerPage() {
   if (itemsPerPage.value === 0) itemsPerPage.value = 1;
 }
 
+const flattenedBookmarks = computed(() => {
+  const flatList = [];
+  props.bookmarks.forEach(item => {
+    flatList.push({ ...item, isFolder: !!item.children });
+    if (item.children) {
+      item.children.forEach(child => {
+        flatList.push({ ...child, isIndented: true });
+      });
+    }
+  });
+  return flatList;
+});
+
 const paginatedBookmarks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return props.bookmarks.slice(start, end);
+  return flattenedBookmarks.value.slice(start, end);
 });
 
 const totalPages = computed(() => {
@@ -132,6 +145,15 @@ onUnmounted(() => {
 
 .bookmark-item a:hover {
   background-color: #ddd;
+}
+
+.folder-item a {
+  font-weight: bold;
+  background-color: #e0e0e0;
+}
+
+.indented-item a {
+  margin-left: 20px;
 }
 
 .pagination-controls {
